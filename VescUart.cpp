@@ -33,9 +33,9 @@ int ReceiveUartMessage(uint8_t* payloadReceived) {
 	uint8_t messageReceived[256];
 	int lenPayload = 0;
 
-	while (SERIALIO.available()) {
+	while (Serial.available()) {
 
-		messageReceived[counter++] = SERIALIO.read();
+		messageReceived[counter++] = Serial.read();
 
 		if (counter == 2) {//case if state of 'counter' with last read 1
 
@@ -61,7 +61,7 @@ int ReceiveUartMessage(uint8_t* payloadReceived) {
 		if (counter == endMessage && messageReceived[endMessage - 1] == 3) {//+1: Because of counter++ state of 'counter' with last read = "endMessage"
 			messageReceived[endMessage] = 0;
 #ifdef DEBUG
-			DEBUGSERIAL.println("End of message reached!");
+			Serial.println("End of message reached!");
 #endif			
 			messageRead = true;
 			break; //Exit if end of message is reached, even if there is still more data in buffer. 
@@ -89,7 +89,7 @@ bool UnpackPayload(uint8_t* message, int lenMes, uint8_t* payload, int lenPay) {
 	crcMessage &= 0xFF00;
 	crcMessage += message[lenMes - 2];
 #ifdef DEBUG
-	DEBUGSERIAL.print("SRC received: "); DEBUGSERIAL.println(crcMessage);
+	Serial.print("SRC received: "); Serial.println(crcMessage);
 #endif // DEBUG
 
 	//Extract payload:
@@ -97,13 +97,13 @@ bool UnpackPayload(uint8_t* message, int lenMes, uint8_t* payload, int lenPay) {
 
 	crcPayload = crc16(payload, message[1]);
 #ifdef DEBUG
-	DEBUGSERIAL.print("SRC calc: "); DEBUGSERIAL.println(crcPayload);
+	Serial.print("SRC calc: "); Serial.println(crcPayload);
 #endif
 	if (crcPayload == crcMessage)
 	{
 #ifdef DEBUG
-		DEBUGSERIAL.print("Received: "); SerialPrint(message, lenMes); DEBUGSERIAL.println();
-		DEBUGSERIAL.print("Payload :      "); SerialPrint(payload, message[1] - 1); DEBUGSERIAL.println();
+		Serial.print("Received: "); SerialPrint(message, lenMes); Serial.println();
+		Serial.print("Payload :      "); SerialPrint(payload, message[1] - 1); Serial.println();
 #endif // DEBUG
 
 		return true;
@@ -139,12 +139,12 @@ int PackSendPayload(uint8_t* payload, int lenPay) {
 	messageSend[count] = NULL;
 
 #ifdef DEBUG
-	DEBUGSERIAL.print("UART package send: "); SerialPrint(messageSend, count);
+	Serial.print("UART package send: "); SerialPrint(messageSend, count);
 
 #endif // DEBUG
 
 	//Sending package
-	SERIALIO.write(messageSend, count);
+	Serial.write(messageSend, count);
 
 
 	//Returns number of send bytes
@@ -236,9 +236,9 @@ void VescUartSetNunchukValues(remotePackage& data) {
 	payload[ind++] = 0;
 
 #ifdef DEBUG
-	DEBUGSERIAL.println("Data reached at VescUartSetNunchuckValues:");
-	DEBUGSERIAL.print("valXJoy = "); DEBUGSERIAL.print(data.valXJoy); DEBUGSERIAL.print(" valYJoy = "); DEBUGSERIAL.println(data.valYJoy);
-	DEBUGSERIAL.print("LowerButton = "); DEBUGSERIAL.print(data.valLowerButton); DEBUGSERIAL.print(" UpperButton = "); DEBUGSERIAL.println(data.valUpperButton);
+	Serial.println("Data reached at VescUartSetNunchuckValues:");
+	Serial.print("valXJoy = "); Serial.print(data.valXJoy); Serial.print(" valYJoy = "); Serial.println(data.valYJoy);
+	Serial.print("LowerButton = "); Serial.print(data.valLowerButton); Serial.print(" UpperButton = "); Serial.println(data.valUpperButton);
 #endif
 
 	PackSendPayload(payload, 11);
@@ -246,26 +246,26 @@ void VescUartSetNunchukValues(remotePackage& data) {
 
 void SerialPrint(uint8_t* data, int len) {
 
-	//	DEBUGSERIAL.print("Data to display: "); DEBUGSERIAL.println(sizeof(data));
+	//	Serial.print("Data to display: "); Serial.println(sizeof(data));
 
 	for (int i = 0; i <= len; i++)
 	{
-		DEBUGSERIAL.print(data[i]);
-		DEBUGSERIAL.print(" ");
+		Serial.print(data[i]);
+		Serial.print(" ");
 	}
-	DEBUGSERIAL.println("");
+	Serial.println("");
 }
 
 
 void SerialPrint(const bldcMeasure& values) {
-	DEBUGSERIAL.print("avgMotorCurrent: "); DEBUGSERIAL.println(values.avgMotorCurrent);
-	DEBUGSERIAL.print("avgInputCurrent: "); DEBUGSERIAL.println(values.avgInputCurrent);
-	DEBUGSERIAL.print("dutyCycleNow: "); DEBUGSERIAL.println(values.dutyCycleNow);
-	DEBUGSERIAL.print("rpm: "); DEBUGSERIAL.println(values.rpm);
-	DEBUGSERIAL.print("inputVoltage: "); DEBUGSERIAL.println(values.inpVoltage);
-	DEBUGSERIAL.print("ampHours: "); DEBUGSERIAL.println(values.ampHours);
-	DEBUGSERIAL.print("ampHoursCharges: "); DEBUGSERIAL.println(values.ampHoursCharged);
-	DEBUGSERIAL.print("tachometer: "); DEBUGSERIAL.println(values.tachometer);
-	DEBUGSERIAL.print("tachometerAbs: "); DEBUGSERIAL.println(values.tachometerAbs);
+	Serial.print("avgMotorCurrent: "); Serial.println(values.avgMotorCurrent);
+	Serial.print("avgInputCurrent: "); Serial.println(values.avgInputCurrent);
+	Serial.print("dutyCycleNow: "); Serial.println(values.dutyCycleNow);
+	Serial.print("rpm: "); Serial.println(values.rpm);
+	Serial.print("inputVoltage: "); Serial.println(values.inpVoltage);
+	Serial.print("ampHours: "); Serial.println(values.ampHours);
+	Serial.print("ampHoursCharges: "); Serial.println(values.ampHoursCharged);
+	Serial.print("tachometer: "); Serial.println(values.tachometer);
+	Serial.print("tachometerAbs: "); Serial.println(values.tachometerAbs);
 }
 
