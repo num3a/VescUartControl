@@ -19,7 +19,7 @@ unsigned long count;
 void setup() {
 	
 	//Setup UART port
-	Serial1.begin(115200);
+	Serial.begin(115200);
 #ifdef DEBUG
 	//SEtup debug port
 	Serial.begin(115200);

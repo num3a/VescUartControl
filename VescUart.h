@@ -23,7 +23,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 /*TThis library was created on an Adruinio 2560 with different serial ports to have a better possibility
 to debug. The serial ports are define with #define:
-#define SERIALIO Serial1  		for the UART port to VESC
+#define SERIALIO Serial		for the UART port to VESC
 #define DEBUGSERIAL Serial		for debuging over USB
 So you need here to define the right serial port for your arduino.
 If you want to use debug, uncomment DEBUGSERIAL and define a port.*/
@@ -31,7 +31,7 @@ If you want to use debug, uncomment DEBUGSERIAL and define a port.*/
 #ifndef _CONFIG_h
 
 #ifdef __AVR_ATmega2560__ 
-#define SERIALIO Serial1  
+#define SERIALIO Serial 
 #define DEBUGSERIAL Serial
 #endif
 
